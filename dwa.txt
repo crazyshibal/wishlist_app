@@ -1,5 +1,29 @@
+# Remove existing remote
+git remote remove origin
+
+# Initialize repository (if not already initialized)
 git init
+
+# Add and commit files
 git add .
 git commit -m "Initial commit"
+
+# Add new remote and push
 git remote add origin https://6c2a360c8292e4f79dda709563195ea8dc5018c0@github.com/crazyshibal/wishlist_app.git
+git branch -M main
 git push -u origin main
+
+
+
+
+
+python -m venv venv
+source venv/bin/activate  # On Linux/Mac
+venv\Scripts\activate     # On Windows
+
+pip install -r requirements.txt
+
+python manage.py migrate
+python manage.py createsuperuser
+
+python manage.py runserver
