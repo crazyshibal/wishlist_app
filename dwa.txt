@@ -1,9 +1,5 @@
 git init
-
 git add .
-
 git commit -m "Initial commit"
-
 git remote add origin https://6c2a360c8292e4f79dda709563195ea8dc5018c0@github.com/crazyshibal/wishlist_app.git
-
 git push -u origin main
