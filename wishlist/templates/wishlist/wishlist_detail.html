@@ -1,0 +1,82 @@
+{% extends 'wishlist/base.html' %}
+
+{% block title %}{{ wishlist.title }}{% endblock %}
+
+{% block content %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1>{{ wishlist.title }}</h1>
+                <span class="badge bg-{% if wishlist.priority == 'H' %}danger{% elif wishlist.priority == 'M' %}warning{% else %}info{% endif %}">
+                    {{ wishlist.get_priority_display }}
+                </span>
+            </div>
+            
+            <p class="card-text">{{ wishlist.description }}</p>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <small class="text-muted">
+                        Created: {{ wishlist.created_at|date:"F d, Y" }} | 
+                        Updated: {{ wishlist.updated_at|date:"F d, Y" }} | 
+                        {% if wishlist.target_date %}
+                        Target Date: {{ wishlist.target_date|date:"F d, Y" }} | 
+                        {% endif %}
+                        {% if wishlist.estimated_cost %}
+                        Estimated Cost: ${{ wishlist.estimated_cost }}
+                        {% endif %}
+                    </small>
+                </div>
+                <div>
+                    <a href="{% url 'wishlist-item-create' wishlist.pk %}" class="btn btn-success btn-sm">Add Item</a>
+                    <a href="{% url 'wishlist-update' wishlist.pk %}" class="btn btn-secondary btn-sm">Edit</a>
+                    <a href="{% url 'wishlist-delete' wishlist.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mb-3">Items ({{ wishlist.items.count }})</h3>
+    
+    {% if wishlist.items.all %}
+        <div class="list-group mb-4">
+            {% for item in wishlist.items.all %}
+            <div class="list-group-item">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="me-3">
+                        <h5 class="mb-1">{{ item.name }}</h5>
+                        <p class="mb-1">{{ item.description }}</p>
+                        <small>
+                            {% if item.price %}Price: ${{ item.price }} | {% endif %}
+                            Status: <span class="badge bg-{% if item.status == 'W' %}primary{% elif item.status == 'P' %}warning{% else %}success{% endif %}">
+                                {{ item.get_status_display }}
+                            </span> | 
+                            Priority: {{ item.priority }}
+                        </small>
+                    </div>
+                    <div class="d-flex flex-column align-items-end">
+                        {% if item.url %}
+                        <a href="{{ item.url }}" target="_blank" class="btn btn-sm btn-outline-primary mb-1">View Product</a>
+                        {% endif %}
+                        <div>
+                            <a href="{% url 'wishlist-item-update' wishlist.pk item.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a href="{% url 'wishlist-item-delete' wishlist.pk item.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </div>
+                    </div>
+                </div>
+                {% if item.image %}
+                <div class="mt-2">
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="img-thumbnail" style="max-height: 100px;">
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            No items in this wishlist yet. <a href="{% url 'wishlist-item-create' wishlist.pk %}">Add your first item</a>.
+        </div>
+    {% endif %}
+    
+    <a href="{% url 'wishlist-home' %}" class="btn btn-outline-primary">Back to All Wishlists</a>
+{% endblock %}

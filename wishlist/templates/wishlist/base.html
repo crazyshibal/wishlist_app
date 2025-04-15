@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist App - {% block title %}{% endblock %}</title>
+    <!-- Add these lines before other links -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'wishlist/images/logo.png' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'wishlist/images/logo.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'wishlist/images/logo.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="{% static 'wishlist/css/style.css' %}" rel="stylesheet" type="text/css">
+    {% load crispy_forms_tags %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'wishlist-home' %}">
+                <img src="{% static 'wishlist/images/logo.png' %}" alt="Wishlist App Logo" width="32" height="32" class="me-2">
+                <i class="fas fa-gift me-2"></i> Wishlist App
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'wishlist-home' %}">My Wishlists</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'wishlist-create' %}">
+                            <i class="fas fa-plus me-1"></i>New Wishlist
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% if request.path == '/' %}
+    <div class="hero-section py-5 mb-4">
+        <div class="container text-center">
+            <h1 class="display-4 mb-3">Welcome to Wishlist App</h1>
+            <p class="lead mb-4">Organize your wishes, track your dreams, share your lists.</p>
+            <a href="{% url 'wishlist-create' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-magic me-2"></i>Create Your First Wishlist
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="container my-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </div>
+
+    <div id="loading-overlay" class="position-fixed top-0 start-0 w-100 h-100 d-none" 
+         style="background: rgba(255,255,255,0.8); z-index: 9999;">
+        <div class="position-absolute top-50 start-50 translate-middle text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Show loading overlay on form submissions and page transitions
+        document.addEventListener('submit', function(e) {
+            document.getElementById('loading-overlay').classList.remove('d-none');
+        });
+        
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
